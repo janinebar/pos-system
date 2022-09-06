@@ -106,6 +106,7 @@ table {
     position: absolute;
     top: 0;
     left: 0;
+    /* display: block; */
 }
 
 #lightbox {
@@ -116,6 +117,7 @@ table {
     position: absolute;
     top: 50%;
     left: 50%;
+    /* display: block; */
 }
 
 #pos-buttons {
@@ -157,7 +159,7 @@ table {
         <!-- Totals -->
         <div id="checkout" style="width: 30%; height: 100%; display: table-cell">
             <div>
-                <p>Order #44</p>
+                <p id="order-num-p">Order #1</p>
             </div>
             <div id="bill-wrapper">
                 <div id="bill-table-wrapper">
@@ -299,10 +301,12 @@ table {
                                 <button id="bill-menu-button">Remove Item</button>
                             </td>
                             <td>
-                                <button id="bill-menu-button">Clear All Items</button>
+                                <button id="bill-menu-button"
+                                        onclick="clearBill()">Clear All Items</button>
                             </td>
                             <td>
-                                <button id="bill-menu-button">New Order</button>
+                                <button id="bill-menu-button"
+                                        onclick="newOrder()">New Order</button>
                             </td>
                         </tr>
                     </table>
@@ -322,11 +326,12 @@ table {
                         <td><button id="menu-button">View Previous Orders</button></td>
                     </tr>
                     <tr>
-                        <td><button id="menu-button">Print Check</button></td>
+                        <td><button id="menu-button"
+                                    onclick="toggleReceiptLightbox()">Print Check</button></td>
                     </tr>
                     <tr>
                         <td><button id="pay-button"
-                            onClick="togglePaymentLightbox()">Pay</button></td>
+                                    onclick="togglePaymentLightbox()">Pay</button></td>
                     </tr>
                 </table>
             </div>
@@ -336,8 +341,8 @@ table {
 </div>
 
 <!-- Processing payment lightbox -->
-<div id="lightbox-wrapper">
-    <div id="lightbox">
+<div id="lightbox-wrapper" style="display: none;">
+    <div id="lightbox" style="display: none;">
         <table>
             <tr>
             <td><div class="loader"></div></td>
@@ -351,6 +356,8 @@ table {
 </div>
 
 <script>
+
+    var orderNum = 1;
 
     const foods = ["Hamburger", "Cheeseburger", "Hotdog", "Fries"];
     const drinks = ["Coke", "Pepsi", "Dr. Pepper", "Juice"];
@@ -432,9 +439,54 @@ table {
         lightbox.style.display = "none";
         }, 4000);
 
+        newOrder();
 
-        // Clear all items
-        // Update order #
+    }
+
+    function toggleReceiptLightbox() {
+        var lightboxWrapper = document.getElementById("lightbox-wrapper");
+        var lightbox = document.getElementById("lightbox");
+
+        if (lightboxWrapper.style.display == "none" && lightbox.style.display == "none") {
+            lightboxWrapper.style.display = "block";
+            lightbox.style.display = "block";
+        } else {
+            lightboxWrapper.style.display = "none";
+            lightbox.style.display = "none";
+        }
+        
+        // Animate print receipt
+        var lightboxText = document.getElementById("lightbox-p");
+        lightboxText.innerHTML = "Printing receipt...";
+        timeout = setTimeout(function() {
+            lightboxWrapper.style.display = "none";
+        lightbox.style.display = "none";
+        }, 4000);
+    }
+
+    function clearBill() {
+        var billTable = document.getElementById("bill-table");
+        var numRows = billTable.rows.length;
+        for (let row = numRows-1; row > 0; row--){
+            console.log(row);
+            billTable.deleteRow(row);
+            console.log(numRows);
+        }
+
+        // Reset bill total
+        document.getElementById("bill-total-td").innerHTML = "";
+
+    }
+
+    function updateOrder() {
+        orderNum++;
+        document.getElementById("order-num-p").innerHTML = "Order #" + orderNum;
+    }
+
+    function newOrder() {
+        clearBill();
+        updateOrder();
+
     }
 
 </script>
