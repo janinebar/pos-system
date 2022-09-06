@@ -34,6 +34,11 @@ table {
     width: 100%;
 }
 
+#checkout {
+    margin-top: -200px;
+
+}
+
 
 #food-button {
     background-color: rgb(247, 247, 159);
@@ -44,10 +49,6 @@ table {
 
 #food-button:hover {
     background-color: #c3c36d;
-}
-
-#checkout {
-    background-color: white;
 }
 
 #bill-wrapper {
@@ -98,6 +99,14 @@ table {
     background-color: rgb(29, 29, 29);
 }
 
+#bill-item-selector {
+    width: 100%;
+    background-color: rgb(47, 66, 191);
+    color: white;
+    height: 50px;
+
+}
+
 #lightbox-wrapper {
     width: 100vw;
     height: 100vh;
@@ -106,18 +115,15 @@ table {
     position: absolute;
     top: 0;
     left: 0;
-    /* display: block; */
 }
 
 #lightbox {
     width: 350px;
     height: 250px;
-    /* margin: 50% 50% 50% 50%; */
     background-color: white;    z-index: 0;
     position: absolute;
     top: 50%;
     left: 50%;
-    /* display: block; */
 }
 
 #pos-buttons {
@@ -159,7 +165,8 @@ table {
         <!-- Totals -->
         <div id="checkout" style="width: 30%; height: 100%; display: table-cell">
             <div>
-                <p id="order-num-p">Order #1</p>
+                <p id="order-num-p"
+                    style="background-color: white;"><b>Order #1</b></p>
             </div>
             <div id="bill-wrapper">
                 <div id="bill-table-wrapper">
@@ -178,6 +185,29 @@ table {
                         </tr>
                     </table>
                 </div>
+            </div>
+            <!-- Bill Item selector -->
+            <div>
+                <table>
+                    <tr>
+                        <td>
+                            <button id="bill-item-selector"
+                                    type="button"
+                                    value="up"
+                                    onclick="selectBillItem(this.value)">Up</button>
+                        </td>
+                        <td>
+                            <button id="bill-item-selector"
+                                    type="button"
+                                    value="down"
+                                    onclick="selectBillItem(this.value)">Down</button>
+                        </td>
+                    </tr>
+                </table>
+                <button id="bill-item-selector" 
+                        type="button"
+                        onclick="restartSelection()">Undo Selection</button>
+
             </div>
         </div>
         
@@ -298,7 +328,9 @@ table {
                     <table>
                         <tr>
                             <td>
-                                <button id="bill-menu-button">Remove Item</button>
+                                <button id="bill-menu-button"
+                                        style="background-color: rgb(145, 22, 22);"
+                                        onclick="removeBillItem()">Remove Item</button>
                             </td>
                             <td>
                                 <button id="bill-menu-button"
@@ -371,6 +403,8 @@ table {
     }
 
     var totalPrice = 0;
+    // const billTable = document.getElementById("bill-table");
+    // const numRows = billTable.rows.length;
 
     function addToBill(itemName) {
         // Find a <table> element with id="bill":
@@ -385,22 +419,8 @@ table {
     
         // Add item and price to bill:
         item.innerHTML = itemName;
-        var itemPrice = 1;
-        if (foods.includes(itemName)){ 
-            itemPrice = prices["foods"];
-        }
-        else if (drinks.includes(itemName)) {
-            itemPrice = prices["drinks"];
-        }
-        else if (snacks.includes(itemName)) {
-            itemPrice = prices["snacks"];
-        }
-        else if (condiments.includes(itemName)) {
-            itemPrice = prices["condiments"];
-        }
-        
-        var itemPriceString = itemPrice % 1 == 0 ? itemPrice.toString() + ".00" : itemPrice.toString() + "0" ;
-        price.innerHTML = "$" + itemPriceString;
+        var itemPrice = getItemPrice(itemName);
+        price.innerHTML = "$" + formatPrice(itemPrice);
 
         item.style.width = "70%";
         price.style.width = "30%";
@@ -411,8 +431,7 @@ table {
     function addTotal(itemPrice) {
         // Get <td> holding total price
         totalPrice += itemPrice;
-        var totalPriceString = totalPrice % 1 == 0 ? totalPrice.toString() + ".00" : totalPrice.toString() + "0" ;
-        document.getElementById("bill-total-td").innerHTML = "$" + totalPriceString;
+        document.getElementById("bill-total-td").innerHTML = "$" + formatPrice(totalPrice);
     } 
     
     function togglePaymentLightbox() {
@@ -474,6 +493,7 @@ table {
         }
 
         // Reset bill total
+        totalPrice = 0;
         document.getElementById("bill-total-td").innerHTML = "";
 
     }
@@ -486,6 +506,99 @@ table {
     function newOrder() {
         clearBill();
         updateOrder();
+
+    }
+
+    var currentBillItemIndex = 0;
+
+    function selectBillItem(direction) {
+
+        var billTable = document.getElementById("bill-table");
+        var numRows = billTable.rows.length;
+
+        // Choose correct item
+        if (direction == "down" && currentBillItemIndex < numRows-1){ 
+            currentBillItemIndex++;
+            prevBillItemIndex = currentBillItemIndex-1;
+        }
+        else if (direction == "up" && currentBillItemIndex > 1){
+            currentBillItemIndex--;
+            prevBillItemIndex = currentBillItemIndex+1;
+        }
+       
+        console.log("currentRow: " + currentBillItemIndex);
+        console.log("prevRow: " + prevBillItemIndex);
+
+        // Highlight selected row
+        var itemRow = document.getElementById("bill-table").rows[currentBillItemIndex];
+        itemRow.style.backgroundColor = "black";
+        itemRow.style.color = "white";
+        
+        // Unhighlight previously selected row 
+        var prevItemRow = document.getElementById("bill-table").rows[prevBillItemIndex];
+        prevItemRow.style.backgroundColor = "white";
+        prevItemRow.style.color = "black";
+
+    }
+
+    function restartSelection() {
+        
+        // Get currently selected item
+        var itemRow = document.getElementById("bill-table").rows[currentBillItemIndex];
+
+        // Unhiglight current item
+        itemRow.style.backgroundColor = "white";
+        itemRow.style.color = "black";
+
+        // reset currentBillItemIndex
+        currentBillItemIndex = 0;
+
+
+    }
+
+    function removeBillItem() {
+
+        if (currentBillItemIndex > 0){
+            // Get item name
+            var itemRow = document.getElementById("bill-table").rows[currentBillItemIndex];
+            console.log("item: " + itemRow.cells[0].innerText);
+            var itemName = itemRow.cells[0].innerText;
+
+            // Find item price
+            var itemPrice = getItemPrice(itemName);
+
+            // update total
+            totalPrice -= itemPrice;
+            document.getElementById("bill-total-td").innerHTML = "$" + formatPrice(totalPrice);
+            
+            // delete row from UI
+            document.getElementById("bill-table").deleteRow(currentBillItemIndex);
+
+            // reset currentBillItemIndex
+            currentBillItemIndex = 0;
+        }
+    }
+
+    function getItemPrice(itemName) {
+        var itemPrice = 0;
+        if (foods.includes(itemName)){ 
+            return itemPrice = prices["foods"];
+        }
+        else if (drinks.includes(itemName)) {
+            return itemPrice = prices["drinks"];
+        }
+        else if (snacks.includes(itemName)) {
+            return itemPrice = prices["snacks"];
+        }
+        else if (condiments.includes(itemName)) {
+            return itemPrice = prices["condiments"];
+        }
+
+        return itemPrice;
+    }
+
+    function formatPrice(price) {
+        return price % 1 == 0 ? price.toString() + ".00" : price.toString() + "0" ;
 
     }
 
