@@ -2,60 +2,53 @@
 <html>
 <head>
 
-<!--
-POS Functionality:
-- √ Select item 
-- √ Add item to bill 
-- Remove item from bill (select which item first)
-- √ View total price 
-- Pay bill
-- Cancel entire order
-- View employee name
-- View order #
-
-Non-functional buttons
-- Edit inventory
-- View previous orders
-- 
-- Print check
--->
-
 <style>
 
 body {
-    background-color: rgb(136, 136, 136);
-    font-family: "Lucida Console", "Courier New", monospace;
+    background-color: rgb(227, 227, 227);
+    font-family: "Verdana", sans-serif;
+    color: #565656;
 }
 
 table {
     border-spacing: 5px;
-    font-family: "Lucida Console", "Courier New", monospace;
     table-layout: fixed;
     width: 100%;
 }
 
-#checkout {
-    margin-top: -200px;
-
+button {
+    border: 0px solid white;
+    border-radius: 5px;
 }
 
+#checkout {
+    background-color: white;
+    border: 0px solid white;
+    border-radius: 5px;
+}
 
 #food-button {
-    background-color: rgb(247, 247, 159);
+    background-color: white;
+    color: #565656;
+    font-size: 13px;
     text-align: center;
     width: 100%;
     height: 100px;
+    border: 0px solid rgb(255, 255, 255);
+    border-radius: 5px;
+
 }
 
 #food-button:hover {
-    background-color: #c3c36d;
+    background-color: rgb(212, 212, 212);
+}
+
+#order-num-p {
+    margin-top: -100px;
 }
 
 #bill-wrapper {
     background-color: white;
-    border-radius: 1px;
-    border-style: solid;
-    border-color: black;
     height: 300px;
 }
 
@@ -68,7 +61,7 @@ table {
     border-bottom: 2px solid black;
 }
 
-#menu-button {
+/* #menu-button {
     background-color:rgb(108, 181, 220);
     width: 100%;
     height: 120px;
@@ -76,12 +69,14 @@ table {
 
 #menu-button:hover {
     background-color: rgb(86, 154, 191);
-}
+} */
 
 #pay-button {
     background-color:rgb(51, 168, 77);
     width: 100%;
-    height: 140px;
+    height: 40px;
+    color: white;
+    box-shadow: 5x 10px black;
 }
 
 #pay-button:hover {
@@ -89,19 +84,19 @@ table {
 }
 
 #bill-menu-button {
-    background-color: rgb(43, 43, 43);
+    background-color: rgb(21, 141, 202);
     color: white;
     width: 100%;
-    height: 100px;
+    height: 40px;
 }
 
 #bill-menu-button:hover {
-    background-color: rgb(29, 29, 29);
+    background-color: rgb(18, 110, 157);
 }
 
 #bill-item-selector {
     width: 100%;
-    background-color: rgb(47, 66, 191);
+    background-color: rgb(21, 141, 202);
     color: white;
     height: 50px;
 
@@ -111,7 +106,7 @@ table {
     width: 100vw;
     height: 100vh;
     background-color: rgba(148, 148, 148, .9);
-    z-index: 0;
+    z-index: 2;
     position: absolute;
     top: 0;
     left: 0;
@@ -120,7 +115,8 @@ table {
 #lightbox {
     width: 350px;
     height: 250px;
-    background-color: white;    z-index: 0;
+    background-color: white;
+    z-index: 2;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -129,6 +125,52 @@ table {
 #pos-buttons {
     z-index: -1;
 }
+
+/* Side navigation animation */
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgb(21, 141, 202);
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 15px;
+  color: white;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+/* ------------------------- */ 
 
 /* Loading animation */
 .loader {
@@ -152,66 +194,22 @@ table {
   100% { transform: rotate(360deg); }
 }
 /* ----------------- */
-
 </style>
+
 </head>
-
 <body>
+    
 
-<div style="width: 100vw; height: 100vh;">
-    <h1 style="text-align: center;">Point of Sale System v1</h1>
+<div style="width: 100vw; height: 100vh;" id="main">
+    <h1 style="text-align: center; font-size: small;">Point of Sale System v2</h1>
+    
+    <!-- Settings Button -->
+    <span style="font-size:15px;cursor:pointer" onclick="openNav()">&#9776; Settings</span>
+
     <div style="width: 100%; height: 100%; display: table">
         
-        <!-- Totals -->
-        <div id="checkout" style="width: 30%; height: 100%; display: table-cell">
-            <div>
-                <p id="order-num-p"
-                    style="background-color: white;"><b>Order #1</b></p>
-            </div>
-            <div id="bill-wrapper">
-                <div id="bill-table-wrapper">
-                    <table id="bill-table">
-                        <tr>
-                            <td id="bill-header-td" style="width: 70%;">Item</td>
-                            <td id="bill-header-td" style="width: 30%;">Price</td>
-                        </tr>
-                    </table>
-                </div>
-                <div style="border-top: 1px solid black">
-                    <table id="bill-total-table">
-                        <tr>
-                            <td style="width: 70%;">Total:</td>
-                            <td id="bill-total-td" style="width: 30%;"></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <!-- Bill Item selector -->
-            <div>
-                <table>
-                    <tr>
-                        <td>
-                            <button id="bill-item-selector"
-                                    type="button"
-                                    value="up"
-                                    onclick="selectBillItem(this.value)">Up</button>
-                        </td>
-                        <td>
-                            <button id="bill-item-selector"
-                                    type="button"
-                                    value="down"
-                                    onclick="selectBillItem(this.value)">Down</button>
-                        </td>
-                    </tr>
-                </table>
-                <button id="bill-item-selector" 
-                        type="button"
-                        onclick="restartSelection()">Undo Selection</button>
-
-            </div>
-        </div>
-        
-        <div style="width: 50%; display: table-cell">
+        <!-- Items Cell -->
+        <div style="width: 70%; display: table-cell">
             <div style="display: table;">
                 <!-- Products -->
                 <div style=" width: 100%; height: 80%; display: table-row;">
@@ -221,25 +219,33 @@ table {
                                 <button id="food-button"
                                     type="button"
                                     value="Hamburger"
-                                    onClick="addToBill(this.value)">Hamburger</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/hamburger.png" height="40%">
+                                        <br>Hamburger</button>
                             </td>
                             <td id="food-td">
                                 <button id="food-button"
                                     type="button"
                                     value="Cheeseburger"
-                                    onClick="addToBill(this.value)">Cheeseburger</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/cheeseburger.png" height="40%">
+                                        <br>Cheeseburger</button>
                             </td>
                             <td id="food-td">
                                 <button id="food-button"
                                     type="button"
                                     value="Hotdog"
-                                    onClick="addToBill(this.value)">Hotdog</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/hotdog.png" height="40%">
+                                        <br>Hotdog</button>
                             </td>
                             <td id="food-td">
                                 <button id="food-button"
                                     type="button"
                                     value="Fries"
-                                    onClick="addToBill(this.value)">Fries</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/fries.png" height="50%">
+                                        <br>Fries</button>
                             </td>
                         </tr>
                         <tr>
@@ -247,25 +253,33 @@ table {
                                 <button id="food-button"
                                     type="button"
                                     value="Coke"
-                                    onClick="addToBill(this.value)">Coke</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/coke.png" height="50%">
+                                        <br>Coke</button>
                             </td>
                             <td id="food-td">
                                 <button id="food-button"
                                     type="button"
                                     value="Pepsi"
-                                    onClick="addToBill(this.value)">Pepsi</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/pepsi.png" height="50%">
+                                        <br>Pepsi</button>
                             </td>
                             <td id="food-td">
                                 <button id="food-button"
                                     type="button"
                                     value="Dr. Pepper"
-                                    onClick="addToBill(this.value)">Dr. Pepper</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/drpepper.png" height="50%">
+                                        <br>Dr. Pepper</button>
                             </td>
                             <td id="food-td">
                                 <button id="food-button"
                                     type="button"
                                     value="Juice"
-                                    onClick="addToBill(this.value)">Juice</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/juice.png" height="30%">
+                                        <br>Juice</button>
                             </td>
                         </tr>
                         <tr>
@@ -273,25 +287,33 @@ table {
                                 <button id="food-button"
                                     type="button"
                                     value="Cookie"
-                                    onClick="addToBill(this.value)">Cookie</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/cookie.png" height="50%">
+                                        <br>Cookie</button>
                             </td>
                             <td id="food-td">
                                 <button id="food-button"
                                     type="button"
                                     value="Ice Cream"
-                                    onClick="addToBill(this.value)">Ice Cream</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/icecream.png" height="50%">
+                                        <br>Ice Cream</button>
                             </td>
                             <td id="food-td">
                                 <button id="food-button"
                                     type="button"
                                     value="Brownie"
-                                    onClick="addToBill(this.value)">Brownie</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/brownie.png" height="30%">
+                                        <br>Brownie</button>
                             </td>
                             <td id="food-td">
                                 <button id="food-button"
                                     type="button"
                                     value="Candy"
-                                    onClick="addToBill(this.value)">Candy</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/candy.png" height="50%">
+                                        <br>Candy</button>
                             </td>
                         </tr>
                         <tr>
@@ -299,25 +321,33 @@ table {
                                 <button id="food-button"
                                     type="button"
                                     value="Ketchup"
-                                    onClick="addToBill(this.value)">Ketchup</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/ketchup.png" height="50%">
+                                        <br>Ketchup</button>
                             </td>
                             <td id="food-td">
                                 <button id="food-button"
                                     type="button"
                                     value="Mustard"
-                                    onClick="addToBill(this.value)">Mustard</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/mustard.png" height="50%">
+                                        <br>Mustard</button>
                             </td>
                             <td id="food-td">
                                 <button id="food-button"
                                     type="button"
                                     value="Mayonnaise"
-                                    onClick="addToBill(this.value)">Mayonnaise</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/mayo.png" height="50%">    
+                                        <br>Mayonnaise</button>
                             </td>
                             <td id="food-td">
                                 <button id="food-button"
                                     type="button"
                                     value="Ranch"
-                                    onClick="addToBill(this.value)">Ranch</button>
+                                    onClick="addToBill(this.value)">
+                                        <img src="img/ranch.png" height="50%">    
+                                        <br>Ranch</button>
                             </td>
                         </tr>
                     </table>
@@ -327,11 +357,6 @@ table {
                 <div style="width: 100%; height: 20%; display: table-row;">
                     <table>
                         <tr>
-                            <td>
-                                <button id="bill-menu-button"
-                                        style="background-color: rgb(145, 22, 22);"
-                                        onclick="removeBillItem()">Remove Item</button>
-                            </td>
                             <td>
                                 <button id="bill-menu-button"
                                         onclick="clearBill()">Clear All Items</button>
@@ -347,23 +372,46 @@ table {
             </div>
         </div>
 
-        <!-- Menu -->
-        <div id="menu" style="width: 20%; height: 100%; display: table-cell">
+        <div id="menu" style="width: 3%; height: 100%; display: table-cell"></div>
+
+        <!-- Checkout Cell -->
+        <div id="checkout" style="width: 27%; height: 100%; display: table-cell; padding: 30px;">
             <div>
-                <table style="width: 100%">
+                <p id="order-num-p"
+                    style="background-color: white;"><b>Order #1</b></p>
+            </div>
+            <div id="bill-wrapper">
+                <div id="bill-table-wrapper">
+                    <table id="bill-table">
+                    </table>
+                </div>
+                <div style="border-top: 1px solid black">
+                    <table id="bill-total-table">
+                        <tr>
+                            <td style="width: 70%;">Total:</td>
+                            <td id="bill-total-td" style="width: 30%;"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Process Bill -->
+            <div>
+                <table>
                     <tr>
-                        <td><button id="menu-button">Edit Inventory</button></td>
+                        <td>
+                            <button id="pay-button"
+                                    type="button"
+                                    value="up"
+                                    onclick="togglePaymentLightbox()">PAY</button>
+                        </td>
                     </tr>
                     <tr>
-                        <td><button id="menu-button">View Previous Orders</button></td>
-                    </tr>
-                    <tr>
-                        <td><button id="menu-button"
-                                    onclick="toggleReceiptLightbox()">Print Check</button></td>
-                    </tr>
-                    <tr>
-                        <td><button id="pay-button"
-                                    onclick="togglePaymentLightbox()">Pay</button></td>
+                        <td>
+                            <button id="bill-item-selector" 
+                                    type="button"
+                                    onclick="toggleReceiptLightbox()">Print Check</button>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -371,6 +419,13 @@ table {
 
     </div>
 </div>
+
+<!-- Side Menu Content -->
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="#" onclick="">Edit Inventory</a>
+    <a href="#" onclick="">View Previous Orders</a>
+  </div>
 
 <!-- Processing payment lightbox -->
 <div id="lightbox-wrapper" style="display: none;">
@@ -390,6 +445,7 @@ table {
 <script>
 
     var orderNum = 1;
+    var totalPrice = 0;
 
     const foods = ["Hamburger", "Cheeseburger", "Hotdog", "Fries"];
     const drinks = ["Coke", "Pepsi", "Dr. Pepper", "Juice"];
@@ -402,10 +458,6 @@ table {
         "condiments": 0.5,
     }
 
-    var totalPrice = 0;
-    // const billTable = document.getElementById("bill-table");
-    // const numRows = billTable.rows.length;
-
     function addToBill(itemName) {
         // Find a <table> element with id="bill":
         var table = document.getElementById("bill-table");
@@ -416,14 +468,21 @@ table {
         // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
         var item = row.insertCell();
         var price = row.insertCell();
+        var edit = row.insertCell();
     
         // Add item and price to bill:
         item.innerHTML = itemName;
         var itemPrice = getItemPrice(itemName);
         price.innerHTML = "$" + formatPrice(itemPrice);
 
-        item.style.width = "70%";
+        edit.innerHTML = `<button 
+                            value="Delete"
+                            onclick="removeBillItem(this)"  
+                            style="background-color: #ffb7b7; color: red;">x</button>`;
+
+        item.style.width = "50%";
         price.style.width = "30%";
+        edit.style.width = "20%";
 
         addTotal(itemPrice);
     }
@@ -433,60 +492,11 @@ table {
         totalPrice += itemPrice;
         document.getElementById("bill-total-td").innerHTML = "$" + formatPrice(totalPrice);
     } 
-    
-    function togglePaymentLightbox() {
-        var lightboxWrapper = document.getElementById("lightbox-wrapper");
-        var lightbox = document.getElementById("lightbox");
-
-        if (lightboxWrapper.style.display == "none" && lightbox.style.display == "none") {
-            lightboxWrapper.style.display = "block";
-            lightbox.style.display = "block";
-        } else {
-            lightboxWrapper.style.display = "none";
-            lightbox.style.display = "none";
-        }
-        
-        // Animate payment processing
-        var lightboxText = document.getElementById("lightbox-p");
-        lightboxText.innerHTML = "Payment processing...";
-        // clearTimeout(timeout);
-        timeout = setTimeout(function() {
-            lightboxText.innerHTML = "Payment successful!";
-        }, 2000);
-        timeout = setTimeout(function() {
-            lightboxWrapper.style.display = "none";
-        lightbox.style.display = "none";
-        }, 4000);
-
-        newOrder();
-
-    }
-
-    function toggleReceiptLightbox() {
-        var lightboxWrapper = document.getElementById("lightbox-wrapper");
-        var lightbox = document.getElementById("lightbox");
-
-        if (lightboxWrapper.style.display == "none" && lightbox.style.display == "none") {
-            lightboxWrapper.style.display = "block";
-            lightbox.style.display = "block";
-        } else {
-            lightboxWrapper.style.display = "none";
-            lightbox.style.display = "none";
-        }
-        
-        // Animate print receipt
-        var lightboxText = document.getElementById("lightbox-p");
-        lightboxText.innerHTML = "Printing receipt...";
-        timeout = setTimeout(function() {
-            lightboxWrapper.style.display = "none";
-        lightbox.style.display = "none";
-        }, 4000);
-    }
 
     function clearBill() {
         var billTable = document.getElementById("bill-table");
         var numRows = billTable.rows.length;
-        for (let row = numRows-1; row > 0; row--){
+        for (let row = numRows-1; row > -1; row--){
             console.log(row);
             billTable.deleteRow(row);
             console.log(numRows);
@@ -500,7 +510,7 @@ table {
 
     function updateOrder() {
         orderNum++;
-        document.getElementById("order-num-p").innerHTML = "Order #" + orderNum;
+        document.getElementById("order-num-p").innerHTML = "<b> Order #" + orderNum + "</b>";
     }
 
     function newOrder() {
@@ -556,27 +566,33 @@ table {
 
     }
 
-    function removeBillItem() {
+    function removeBillItem(r) {
 
-        if (currentBillItemIndex > 0){
-            // Get item name
-            var itemRow = document.getElementById("bill-table").rows[currentBillItemIndex];
-            console.log("item: " + itemRow.cells[0].innerText);
-            var itemName = itemRow.cells[0].innerText;
+        // Get item name
+        currentBillItemIndex = r.parentNode.parentNode.rowIndex;
+        var itemRow = document.getElementById("bill-table").rows[currentBillItemIndex];
+        console.log("item: " + itemRow.cells[0].innerText);
+        var itemName = itemRow.cells[0].innerText;
 
-            // Find item price
-            var itemPrice = getItemPrice(itemName);
+        // Find item price
+        var itemPrice = getItemPrice(itemName);
 
-            // update total
-            totalPrice -= itemPrice;
-            document.getElementById("bill-total-td").innerHTML = "$" + formatPrice(totalPrice);
-            
-            // delete row from UI
-            document.getElementById("bill-table").deleteRow(currentBillItemIndex);
+        // update total
+        totalPrice -= itemPrice;
+        document.getElementById("bill-total-td").innerHTML = "$" + formatPrice(totalPrice);
+        
+        // delete row from UI
+        document.getElementById("bill-table").deleteRow(currentBillItemIndex);
 
-            // reset currentBillItemIndex
-            currentBillItemIndex = 0;
-        }
+        // reset currentBillItemIndex
+        currentBillItemIndex = 0;
+        
+    }
+
+    function deleteBillItem(r){
+        var i = r.parentNode.parentNode.rowIndex;
+
+        document.getElementById("bill-table").deleteRow(i);
     }
 
     function getItemPrice(itemName) {
@@ -600,6 +616,68 @@ table {
     function formatPrice(price) {
         return price % 1 == 0 ? price.toString() + ".00" : price.toString() + "0" ;
 
+    }
+
+    // Side navigation 
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+    }
+
+    function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("main").style.marginLeft= "0";
+    }
+
+    // Lightboxes
+    function togglePaymentLightbox() {
+        var lightboxWrapper = document.getElementById("lightbox-wrapper");
+        var lightbox = document.getElementById("lightbox");
+
+        if (lightboxWrapper.style.display == "none" && lightbox.style.display == "none") {
+            lightboxWrapper.style.display = "block";
+            lightbox.style.display = "block";
+        } else {
+            lightboxWrapper.style.display = "none";
+            lightbox.style.display = "none";
+        }
+        
+        // Animate payment processing
+        var lightboxText = document.getElementById("lightbox-p");
+        lightboxText.innerHTML = "Payment processing...";
+        // clearTimeout(timeout);
+        timeout = setTimeout(function() {
+            lightboxText.innerHTML = "Payment successful!";
+        }, 2000);
+        timeout = setTimeout(function() {
+            lightboxWrapper.style.display = "none";
+        lightbox.style.display = "none";
+        }, 4000);
+
+        newOrder();
+
+    }
+
+    function toggleReceiptLightbox() {
+        var lightboxWrapper = document.getElementById("lightbox-wrapper");
+        var lightbox = document.getElementById("lightbox");
+
+        if (lightboxWrapper.style.display == "none" && lightbox.style.display == "none") {
+            lightboxWrapper.style.display = "block";
+            lightbox.style.display = "block";
+
+        } else {
+            lightboxWrapper.style.display = "none";
+            lightbox.style.display = "none";
+        }
+        
+        // Animate print receipt
+        var lightboxText = document.getElementById("lightbox-p");
+        lightboxText.innerHTML = "Printing receipt...";
+        timeout = setTimeout(function() {
+            lightboxWrapper.style.display = "none";
+        lightbox.style.display = "none";
+        }, 4000);
     }
 
 </script>
