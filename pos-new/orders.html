@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    </head>
+<body>
+    <h1>Previous orders</h1>
+    <div id="prev-orders-div">
+        <ul id="prev-orders-list">
+
+        </ul>
+    </div>
+
+<!-- Firebase ------------------------------------------------------------------------->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script>
+console.log("----------------orders page----------------------");
+
+// Initialize Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyBTrkvtjmgh4whP4ToAf2lYJaWKczjg3Sc",
+    authDomain: "anthos-edge-pos.firebaseapp.com",
+    projectId: "anthos-edge-pos",
+    storageBucket: "anthos-edge-pos.appspot.com",
+    messagingSenderId: "347869596319",
+    appId: "1:347869596319:web:a818cbc9f60bd24fd670aa",
+    measurementId: "G-5BSWVWXQ0P"
+};  
+firebase.initializeApp(firebaseConfig);
+console.log("success -- orders pages");
+const firestore = firebase.firestore();
+
+// Read previous orders from Firebase
+var ordersList = document.getElementById("prev-orders-list");
+
+    firestore.collection("orders").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+
+            // For each order, print
+            var orderNum = doc.id;
+            var orderData = doc.data();
+
+            console.log(`${doc.id} => ${doc.data()}`);
+            console.log(Object.keys(doc.data()));
+            console.log(doc.data().paidFor);
+            console.log(typeof(orderData.items));
+            console.log(orderData.items);
+
+            // Order number
+            var liOrderNum = document.createElement("li");
+            liOrderNum.innerHTML = orderNum;
+
+            // UL for each food item
+            var ulFoodItems = document.createElement("ul");
+            var liOrderDetails = document.createElement("li");
+            liOrderDetails.innerHTML = `
+                <li>paidFor: ${orderData.paidFor}</li>
+                <li>order totalPrice: ${orderData.totalPrice}</li>
+            `;
+            ulFoodItems.appendChild(liOrderDetails);
+            
+            // Iterate through each food item in the order
+            // Just returns the key. 
+            for (const foodItem in orderData.items) {
+
+                const foodItemDict = orderData.items[foodItem];
+                console.log(foodItemDict["quantity"]);
+
+                // Li for each food item
+                var liFoodItem = document.createElement("li");
+                liFoodItem.innerHTML = foodItem;
+                
+                // Ul for food details
+                var ulFoodDetails = document.createElement("ul");
+                ulFoodDetails.innerHTML =  `
+                    <li>pricePerItem: ${foodItemDict["pricePerItem"]}</li>
+                    <li>quantity: ${foodItemDict["quantity"]}</li>
+                    <li>totalPrice: ${foodItemDict["totalPrice"]}</li>
+                `;
+
+                // Append to Li foodItem
+                liFoodItem.appendChild(ulFoodDetails);
+
+                // Append food item to li
+                ulFoodItems.appendChild(liFoodItem);
+            }
+            
+            liOrderNum.appendChild(ulFoodItems);
+            // Each item details
+            ordersList.appendChild(liOrderNum);       
+
+    });
+});
+
+
+</script>
+</body>
+</html>

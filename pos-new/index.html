@@ -432,7 +432,7 @@ button {
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="#" onclick="">Edit Inventory</a>
-    <a href="#" onclick="">View Previous Orders</a>
+    <a href="orders.html" onclick="">View Previous Orders</a>
   </div>
 
 <!-- Processing payment lightbox -->
@@ -626,6 +626,8 @@ button {
 
     }
 
+    
+
     // Side navigation 
     function openNav() {
         document.getElementById("mySidenav").style.width = "250px";
@@ -653,7 +655,6 @@ button {
         // Animate payment processing
         var lightboxText = document.getElementById("lightbox-p");
         lightboxText.innerHTML = "Payment processing...";
-        // clearTimeout(timeout);
         timeout = setTimeout(function() {
             lightboxText.innerHTML = "Payment successful!";
         }, 2000);
@@ -688,6 +689,67 @@ button {
         }, 4000);
     }
 
+</script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script>
+    // Firebase configuration
+    console.log("--------------------------------------");
+    const firebaseConfig = {
+        apiKey: "AIzaSyBTrkvtjmgh4whP4ToAf2lYJaWKczjg3Sc",
+        authDomain: "anthos-edge-pos.firebaseapp.com",
+        projectId: "anthos-edge-pos",
+        storageBucket: "anthos-edge-pos.appspot.com",
+        messagingSenderId: "347869596319",
+        appId: "1:347869596319:web:a818cbc9f60bd24fd670aa",
+        measurementId: "G-5BSWVWXQ0P"
+    };
+
+
+    firebase.initializeApp(firebaseConfig);
+    console.log("success?");
+
+    const firestore = firebase.firestore();
+
+    // Lightbox with previous orders
+    // addToFirestore();
+
+
+    function addToFirestore() {
+            // Add a new document in collection "cities"
+        // const today = new Date()
+        // const collectionName = "orders-" + today.getMonth() + "-" + today.getDate() + "-" + today.getFullYear();
+        firestore.collection("orders").doc("999").set({
+            name: "Los Angeles",
+            state: "CA",
+            country: "USA"
+        })
+        .then(() => {
+            console.log("Document successfully written!");
+        })
+        .catch((error) => {
+            console.error("Error writing document: ", error);
+        });
+    }
+
+    // testFirestore();
+
+    function testFirestore() {
+            // Add a new document in collection "cities"
+        // const today = new Date()
+        // const collectionName = "orders-" + today.getMonth() + "-" + today.getDate() + "-" + today.getFullYear();
+        firestore.collection("orders").doc("999").set({
+            name: "Los Angeles",
+            state: "CA",
+            country: "USA"
+        })
+        .then(() => {
+            console.log("Document successfully written!");
+        })
+        .catch((error) => {
+            console.error("Error writing document: ", error);
+        });
+    }
 </script>
 
 </body>
