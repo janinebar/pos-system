@@ -1,42 +1,101 @@
-// // Import the functions you need from the SDKs you need
-// // https://firebase.google.com/docs/web/setup#available-libraries
-// import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
-// import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js";
+// Firebase configuration
+console.log("----------------- ORDER PAGE ---------------------");
+console.log(auth.TEST);
+const firebaseConfig = {
+    apiKey: auth.API_KEY,
+    authDomain: auth.AUTH_DOMAIN,
+    projectId: auth.PROJECT_ID,
+    storageBucket: auth.STORAGE_BUCKET,
+    messagingSenderId: auth.MESSAGING_SENDER_ID,
+    appId: auth.APP_ID,
+    measurementId: auth.MEASUREMENT_ID
+};
 
+firebase.initializeApp(firebaseConfig);
+console.log("firebase success");
+const firestore = firebase.firestore();
+firestore.enablePersistence();
 
-// // Your web app's Firebase configuration
-// // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// // REPLACE WITH ENV
-// const firebaseConfig = {
-// apiKey: "AIzaSyBTrkvtjmgh4whP4ToAf2lYJaWKczjg3Sc",
-// authDomain: "anthos-edge-pos.firebaseapp.com",
-// projectId: "anthos-edge-pos",
-// storageBucket: "anthos-edge-pos.appspot.com",
-// messagingSenderId: "347869596319",
-// appId: "1:347869596319:web:a818cbc9f60bd24fd670aa",
-// measurementId: "G-5BSWVWXQ0P"
-// };
+// **************** INDEX.html **************************
+function addToFirestore(billItems, totalPrice, orderNum) {
+    // const today = new Date()
+    // const collectionName = "orders-" + today.getMonth() + "-" + today.getDate() + "-" + today.getFullYear();
+    firestore.collection("orders").doc(orderNum.toString()).set({
+        items: billItems,
+        paidFor: true,
+        totalPrice: totalPrice,
+        timestamp: firebase.firestore.Timestamp.fromDate(new Date),
+    })
+    .then(() => {
+        console.log("Document successfully written!");
+    })
+    .catch((error) => {
+        console.error("Error writing document: ", error);
+    });
+}
 
-// // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const db = getFirestore(app);
+// **************** ORDERS.html **************************
+// Read previous orders from Firebase
+var ordersList = document.getElementById("prev-orders-list");
+firestore.collection("orders").get().then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
 
-// // Read data from Firestore
-// const querySnapshot = await getDocs(collection(db, "orders"));
-// querySnapshot.forEach((doc) => {
-//   console.log(`${doc.id} => ${doc.data()}`);
-// });
+        // For each order, print
+        var orderNum = doc.id;
+        var orderData = doc.data();
 
-// // Add simple order to Firestore
-// // Add a second document with a generated ID.
-// // try {
-// //   const docRef = await addDoc(collection(db, "orders"), {
-// //     items: "Alan",
-// //     paidFor: true,
-// //     totalPrice: 5,
-// //   });
+        console.log(`${doc.id} => ${doc.data()}`);
+        console.log(Object.keys(doc.data()));
+        console.log(doc.data().paidFor);
+        console.log(typeof(orderData.items));
+        console.log(orderData.items);
 
-// //   console.log("Document written with ID: ", docRef.id);
-// // } catch (e) {
-// //   console.error("Error adding document: ", e);
-// // }
+        // Order number
+        var liOrderNum = document.createElement("li");
+        liOrderNum.innerHTML = `<b>Order # ${orderNum}</b>`;
+
+        // UL for each food item
+        var ulFoodItems = document.createElement("ul");
+        var liOrderDetails = document.createElement("li");
+        liOrderDetails.innerHTML = `
+            <li>Paid For: ${orderData.paidFor}</li>
+            <li>Order Total Price: ${orderData.totalPrice}</li>
+            <li>Order Timestamp: ${orderData.timestamp.toDate()}</li>
+        `;
+        ulFoodItems.style.listStyle = "none";
+        ulFoodItems.appendChild(liOrderDetails);
+        
+        // Iterate through each food item in the order
+        // Just returns the key. 
+        for (const foodItem in orderData.items) {
+
+            const foodItemDict = orderData.items[foodItem];
+            console.log(foodItemDict["quantity"]);
+
+            // Li for each food item
+            var liFoodItem = document.createElement("li");
+            liFoodItem.innerHTML = foodItem;
+            
+            // Ul for food details
+            var ulFoodDetails = document.createElement("ul");
+            ulFoodDetails.innerHTML =  `
+                <li>Price Per Item: ${foodItemDict["pricePerItem"]}</li>
+                <li>Quantity: ${foodItemDict["quantity"]}</li>
+                <li>Item Total Price: ${foodItemDict["totalPrice"]}</li>
+            `;
+
+            // Append to Li foodItem
+            liFoodItem.appendChild(ulFoodDetails);
+
+            // Append food item to li
+            ulFoodItems.appendChild(liFoodItem);
+        }
+        
+        // Add details to each order
+        liOrderNum.appendChild(ulFoodItems);
+        
+        // Add each order 
+        ordersList.appendChild(liOrderNum);       
+
+    });
+});

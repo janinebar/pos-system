@@ -1,0 +1,182 @@
+body {
+    background-color: rgb(227, 227, 227);
+    font-family: "Ubuntu", sans-serif;
+    color: #565656;
+}
+
+table {
+    border-spacing: 5px;
+    table-layout: fixed;
+    width: 100%;
+}
+
+button {
+    border: 0px solid white;
+    border-radius: 5px;
+    font-family: "Ubuntu", sans-serif;
+}
+
+#checkout {
+    background-color: white;
+    border: 0px solid white;
+    border-radius: 5px;
+}
+
+#food-button {
+    background-color: white;
+    color: #565656;
+    font-size: 13px;
+    text-align: center;
+    width: 100%;
+    height: 130px;
+    border: 0px solid rgb(255, 255, 255);
+    border-radius: 5px;
+    font-family: "Ubuntu", sans-serif;
+
+}
+
+#food-button:hover {
+    background-color: rgb(212, 212, 212);
+}
+
+#order-num-p {
+    margin-top: -100px;
+}
+
+#bill-wrapper {
+    background-color: white;
+    height: 300px;
+}
+
+#bill-table-wrapper {
+    height: 270px;
+    overflow: auto;
+}
+
+#bill-header-td {
+    border-bottom: 2px solid black;
+}
+
+#pay-button {
+    background-color:rgb(51, 168, 77);
+    width: 100%;
+    height: 60px;
+    color: white;
+    box-shadow: 5x 10px black;
+}
+
+#pay-button:hover {
+    background-color: rgb(18, 134, 43);
+}
+
+#bill-menu-button {
+    background-color: rgb(21, 141, 202);
+    color: white;
+    width: 100%;
+    height: 40px;
+}
+
+#bill-menu-button:hover {
+    background-color: rgb(18, 110, 157);
+}
+
+#bill-item-selector {
+    width: 100%;
+    background-color: rgb(21, 141, 202);
+    color: white;
+    height: 50px;
+
+}
+
+#lightbox-wrapper {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(148, 148, 148, .9);
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#lightbox {
+    width: 350px;
+    height: 250px;
+    background-color: white;
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+#pos-buttons {
+    z-index: -1;
+}
+
+/* Side navigation animation */
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgb(21, 141, 202);
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 15px;
+  color: white;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 5px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+/* ------------------------- */ 
+
+/* Loading animation */
+.loader {
+  border: 10px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 10px solid #3498db;
+  width: 30px;
+  height: 30px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+/* ----------------- */

@@ -219,8 +219,8 @@ function billToMap() {
     console.log("billtomap");
     //Iterate through bill items
     for(i = 1; i < billTable.rows.length; i++){
-        itemName = billTable.rows[i].cells[0].innerText;
-        itemPrice = getItemPrice(itemName);
+        var itemName = billTable.rows[i].cells[0].innerText;
+        var itemPrice = getItemPrice(itemName);
         console.log(itemName);
         console.log(itemPrice);
 

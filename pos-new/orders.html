@@ -1,98 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
-    </head>
-<body>
-    <h1>Previous orders</h1>
-    <div id="prev-orders-div">
-        <ul id="prev-orders-list">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet">
+<style>
+    body {
+        background-color: rgb(227, 227, 227);
+        font-family: "Ubuntu", sans-serif;
+        padding: 30px;
+        text-align: center;
+    }
+    
+    /* ----- Return Button ----- */
+    #return {
+        text-align: center;
+        text-decoration: none;
+        color: white;
+        background-color: rgb(21, 141, 202);
+        padding: 10px 100px;
+        margin-top: 10px;
+        border: 0px;
+        border-radius: 5px;
+    }
 
-        </ul>
+    #return:hover {
+        background-color: rgb(18, 110, 157);
+    }
+    
+    #prev-orders-list {
+        list-style: none;
+        font-size: 12px;
+    }
+    
+    #prev-orders-div {
+        background-color: white;
+        height: 400px;
+        width: 80%;
+        overflow-y: auto;
+        margin: auto;
+        text-align: left;
+    }
+    
+    /* ----- Orders Scrollbar ----- */
+    #prev-orders-div::-webkit-scrollbar {
+        -webkit-appearance: none;
+    }
+    
+    #prev-orders-div::-webkit-scrollbar:vertical {
+        width: 11px;
+    }
+    
+    #prev-orders-div::-webkit-scrollbar:horizontal {
+        height: 11px;
+    }
+    
+    #prev-orders-div::-webkit-scrollbar-thumb {
+        /* border-radius: 8px; */
+        border: 2px solid white; /* should match background, can't be transparent */
+        background-color: black;
+    }
+</style>
+</head>
+<body>
+    <div id="main">
+        <h2>Previous orders</h2>
+        <div id="prev-orders-div">
+            <ul id="prev-orders-list">
+            </ul>
+        </div>
+        <a href="index.html">
+            <button id="return">Return</button></a>
     </div>
 
 <!-- Firebase ------------------------------------------------------------------------->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script>
-console.log("----------------orders page----------------------");
-
-// Initialize Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyBTrkvtjmgh4whP4ToAf2lYJaWKczjg3Sc",
-    authDomain: "anthos-edge-pos.firebaseapp.com",
-    projectId: "anthos-edge-pos",
-    storageBucket: "anthos-edge-pos.appspot.com",
-    messagingSenderId: "347869596319",
-    appId: "1:347869596319:web:a818cbc9f60bd24fd670aa",
-    measurementId: "G-5BSWVWXQ0P"
-};  
-firebase.initializeApp(firebaseConfig);
-console.log("success -- orders pages");
-const firestore = firebase.firestore();
-
-// Read previous orders from Firebase
-var ordersList = document.getElementById("prev-orders-list");
-
-    firestore.collection("orders").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-
-            // For each order, print
-            var orderNum = doc.id;
-            var orderData = doc.data();
-
-            console.log(`${doc.id} => ${doc.data()}`);
-            console.log(Object.keys(doc.data()));
-            console.log(doc.data().paidFor);
-            console.log(typeof(orderData.items));
-            console.log(orderData.items);
-
-            // Order number
-            var liOrderNum = document.createElement("li");
-            liOrderNum.innerHTML = orderNum;
-
-            // UL for each food item
-            var ulFoodItems = document.createElement("ul");
-            var liOrderDetails = document.createElement("li");
-            liOrderDetails.innerHTML = `
-                <li>paidFor: ${orderData.paidFor}</li>
-                <li>order totalPrice: ${orderData.totalPrice}</li>
-            `;
-            ulFoodItems.appendChild(liOrderDetails);
-            
-            // Iterate through each food item in the order
-            // Just returns the key. 
-            for (const foodItem in orderData.items) {
-
-                const foodItemDict = orderData.items[foodItem];
-                console.log(foodItemDict["quantity"]);
-
-                // Li for each food item
-                var liFoodItem = document.createElement("li");
-                liFoodItem.innerHTML = foodItem;
-                
-                // Ul for food details
-                var ulFoodDetails = document.createElement("ul");
-                ulFoodDetails.innerHTML =  `
-                    <li>pricePerItem: ${foodItemDict["pricePerItem"]}</li>
-                    <li>quantity: ${foodItemDict["quantity"]}</li>
-                    <li>totalPrice: ${foodItemDict["totalPrice"]}</li>
-                `;
-
-                // Append to Li foodItem
-                liFoodItem.appendChild(ulFoodDetails);
-
-                // Append food item to li
-                ulFoodItems.appendChild(liFoodItem);
-            }
-            
-            liOrderNum.appendChild(ulFoodItems);
-            // Each item details
-            ordersList.appendChild(liOrderNum);       
-
-    });
-});
-
-
-</script>
+<script type="text/javascript" src="auth.js"></script>
+<script type="text/javascript" src="firebase.js"></script>
 </body>
 </html>
