@@ -1,6 +1,6 @@
 // Firebase configuration
 console.log("----------------- ORDER PAGE ---------------------");
-console.log(auth.TEST);
+console.log(process.env.TEST_ENV);
 const firebaseConfig = {
     apiKey: auth.API_KEY,
     authDomain: auth.AUTH_DOMAIN,
