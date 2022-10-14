@@ -8,6 +8,6 @@ steps:
 # Deploy container image to Cloud Run service and name it "pos-v2"
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'pos', '--image', 'gcr.io/$PROJECT_ID/pos:v2', '--region', 'us-central1', '--port', '80', --allow-unauthenticated]
+  args: ['run', 'deploy', 'pos-v2', '--image', 'gcr.io/$PROJECT_ID/pos:v2', '--region', 'us-central1', '--port', '80', --allow-unauthenticated]
 images:
 - gcr.io/$PROJECT_ID/pos:v2
