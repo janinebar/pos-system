@@ -67,9 +67,7 @@ function displayBill(itemName) {
         // Insert new cells (<td> elements)
         var value = row.insertCell(0);
         var namePrice = row.insertCell();
-        // var incQuantity = row.insertCell();
         var quantity = row.insertCell();
-        // var decQuantity = row.insertCell();
         var edit = row.insertCell();
 
         // Insert cell contents
@@ -77,8 +75,6 @@ function displayBill(itemName) {
         namePrice.innerHTML = `<p style="font-size: 13px;">${itemName}</p>
                                 <p style="margin-top:-11px; font-size: 18px;"><b>$${totalPrice}</p>`;
         quantity.innerText = billItems[itemName]["quantity"];
-        // incQuantity.innerHTML = "+";
-        // decQuantity.innerHTML = "-";
         edit.innerHTML = `<button 
                     value="Delete"
                     onclick="removeBillItem(this)"  
@@ -89,8 +85,6 @@ function displayBill(itemName) {
         namePrice.style.width = "50%";
         quantity.style.width = "30%"
         edit.style.width = "20%"
-        // incQuantity.style.width = "15%"
-        // decQuantity.style.width = "15%";
         value.style.display = "none";
     }
 }
@@ -130,7 +124,6 @@ function updateOrder() {
 function newOrder() {
     clearBill();
     updateOrder();
-
 }
 
 function removeBillItem(r) {
